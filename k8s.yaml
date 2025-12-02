@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: microserviciocxas
+  name: cu-ms-payments
   namespace: cx-ayala-dev
   labels:
-    app: microserviciocxas
+    app: cu-ms-payments
     depto: pagos
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: microserviciocxas
+      app: cu-ms-payments
   template:
     metadata:
       labels:
-        app: microserviciocxas
+        app: cu-ms-payments
     spec:
       containers:
       - name: hola-mundo
-        image: cxayala/hola-mundo:7
+        image: cxayala/cu-ms-payments:3
         ports:
           - containerPort: 3000
         resources:
@@ -30,25 +30,25 @@ spec:
             cpu: "300m"
         envFrom:
             - configMapRef:
-                name: microserviciocxas
+                name: cu-ms-payments
             - secretRef:
-                name: microserviciocxas
+                name: cu-ms-payments
         volumeMounts:
             - name: config
               mountPath: /app/config
       volumes:
         - name: config
           configMap:
-            name: microserviciocxas-config
+            name: cu-ms-payments-config
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: microserviciocxas-svc
+  name: cu-ms-payments-svc
   namespace: cx-ayala-dev
 spec:
   selector:
-    app: microserviciocxas
+    app: cu-ms-payments
   ports:
     - protocol: TCP
       port: 3000
@@ -58,7 +58,7 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: microserviciocxas
+  name: cu-ms-payments
   namespace: cx-ayala-dev
 data:
   LOG_LEVEL: debug
@@ -66,7 +66,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: microserviciocxas-config
+  name: cu-ms-payments-config
   namespace: cx-ayala-dev
 data:
   app.conf: |
@@ -77,7 +77,7 @@ data:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: microserviciocxas
+  name: cu-ms-payments
   namespace: cx-ayala-dev
 data:
   DATABASE_PASSWORD: U3VwZXJTZWd1cm8yMDI1
@@ -85,13 +85,13 @@ data:
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: microserviciocxas
+  name: cu-ms-payments
   namespace: cx-ayala-dev
 spec:
   scaleTargetRef:  
     apiVersion: apps/v1
     kind: Deployment
-    name: microserviciocxas
+    name: cu-ms-payments
   minReplicas: 2
   maxReplicas: 6
   metrics:
