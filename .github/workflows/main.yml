@@ -23,41 +23,22 @@ jobs:
         run: |
           echo "Pushing Docker image..."
           docker push cxayala/cu-ms-payments:${{ github.run_number }}
-  deploy_openshift:
-    name: Deploy to OpenShift
-    needs: my_job
+  deploy:
+    name: DEPLOY
     runs-on: ubuntu-22.04
+    needs: build
     steps:
       - uses: actions/checkout@v4
-      - name: Install oc CLI
-        run: |
-          set -e
-          echo "Downloading oc client..."
-          curl -LO https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz
-          tar -xzf openshift-client-linux.tar.gz
-          chmod +x oc
-          sudo mv oc /usr/local/bin/
-          oc version
+
+      - name: Install OpenShift CLI
+        uses: redhat-actions/oc-installer@v1
+        with:
+          oc_version: "4.5"
+
       - name: Login to OpenShift
-        env:
-          OPENSHIFT_SERVER: ${{ secrets.OPENSHIFT_SERVER }}
-          OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
-          OPENSHIFT_NAMESPACE: ${{ secrets.OPENSHIFT_NAMESPACE }}
         run: |
-          set -e
-          if [ -z "$OPENSHIFT_SERVER" ] || [ -z "$OPENSHIFT_TOKEN" ]; then
-            echo "OPENSHIFT_SERVER and OPENSHIFT_TOKEN secrets are required" >&2
-            exit 1
-          fi
-          echo "Logging into OpenShift..."
-          oc login "$OPENSHIFT_SERVER" --token="$OPENSHIFT_TOKEN" --insecure-skip-tls-verify=true
-          if [ -n "$OPENSHIFT_NAMESPACE" ]; then
-            oc project "$OPENSHIFT_NAMESPACE"
-          fi
-      - name: Deploy k8s manifest
+          oc login --token=${{ secrets.OPENSHIFT_TOKEN }} --server=${{ secrets.OPENSHIFT_SERVER }}
+
+      - name: Deploy to OpenShift
         run: |
-          set -e
-          echo "Applying k8s.yaml to OpenShift..."
           oc apply -f k8s.yaml
-          if [ -n "${{ secrets.OPENSHIFT_NAMESPACE }}" ]; then oc get all -n "${{ secrets.OPENSHIFT_NAMESPACE }}"; else oc get all; fi
-  
