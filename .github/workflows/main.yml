@@ -22,5 +22,5 @@ jobs:
       - name: Pushea Imagen
         run: |
           echo "Pushing Docker image..."
-          docker push cxayala/hcu-ms-payments:${{ github.run_number }}
-          docker push cxayala/hcu-ms-payments:${{ github.run_number }}
+          docker push cxayala/cu-ms-payments:${{ github.run_number }}
+
