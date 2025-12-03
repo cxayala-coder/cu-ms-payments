@@ -47,20 +47,22 @@ spec:
           successThreshold: 1
         livenessProbe:
           httpGet:
-            path: /startup
+            path: /liveness
             port: 3000
-          initialDelaySeconds: 15
-          periodSeconds: 20
+          initialDelaySeconds: 5
+          periodSeconds: 10
           timeoutSeconds: 5
           failureThreshold: 3
+          successThreshold: 1
         readinessProbe:
           httpGet:
-            path: /ready
+            path: /readiness
             port: 3000
           initialDelaySeconds: 5
           periodSeconds: 10
           timeoutSeconds: 3
           failureThreshold: 3
+          successThreshold: 1
       volumes:
         - name: config
           configMap:
