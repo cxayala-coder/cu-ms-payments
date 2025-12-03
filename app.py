@@ -9,6 +9,17 @@ PORT = 3000
 
 class HolaMundoHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
+        # Endpoints de health/startup
+        if self.path in ('/startup', '/liveness', '/readiness'):
+            # Log cada vez que se llama al endpoint
+            print(f"se llamo a endpoint {self.path}")
+            self.send_response(200)
+            self.send_header('Content-type', 'text/plain; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(b'OK')
+            return
+
+        # Comportamiento por defecto
         self.send_response(200)
         self.send_header('Content-type', 'text/html; charset=utf-8')
         self.end_headers()
