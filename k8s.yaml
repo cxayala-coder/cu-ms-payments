@@ -36,6 +36,14 @@ spec:
         volumeMounts:
             - name: config
               mountPath: /app/config
+        startupProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 30
         livenessProbe:
           httpGet:
             path: /healthz
