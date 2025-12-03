@@ -19,6 +19,7 @@ class HolaMundoHandler(http.server.SimpleHTTPRequestHandler):
         if self.path in ('/startup', '/liveness', '/readiness'):
             # Log cada vez que se llama al endpoint
             print(f"se llamo a endpoint {self.path}")
+            sys.stdout.flush()            
             self.send_response(200)
             self.send_header('Content-type', 'text/plain; charset=utf-8')
             self.end_headers()
@@ -33,6 +34,7 @@ class HolaMundoHandler(http.server.SimpleHTTPRequestHandler):
     
     def log_message(self, format, *args):
         print(f"{self.address_string()} - {format%args}")
+        sys.stdout.flush()
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         print(f"[{timestamp}] {self.address_string()} - {format%args}", file=sys.stdout)
         sys.stdout.flush()
