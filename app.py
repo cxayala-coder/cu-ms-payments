@@ -4,11 +4,17 @@ Servidor HTTP simple que responde Hola Mundo
 """
 import http.server
 import socketserver
+import sys
+from datetime import datetime
 
 PORT = 3000
 
 class HolaMundoHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        print(f"[{timestamp}] Solicitud GET recibida", file=sys.stdout)
+        print(f"[{timestamp}] Path: {self.path}", file=sys.stdout)
+                
         # Endpoints de health/startup
         if self.path in ('/startup', '/liveness', '/readiness'):
             # Log cada vez que se llama al endpoint
@@ -27,6 +33,9 @@ class HolaMundoHandler(http.server.SimpleHTTPRequestHandler):
     
     def log_message(self, format, *args):
         print(f"{self.address_string()} - {format%args}")
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        print(f"[{timestamp}] {self.address_string()} - {format%args}", file=sys.stdout)
+        sys.stdout.flush()
 
 if __name__ == "__main__":
     with socketserver.TCPServer(("", PORT), HolaMundoHandler) as httpd:
