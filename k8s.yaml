@@ -134,4 +134,22 @@ spec:
       target:
         type: Utilization
         averageUtilization: 70
+# Variables de entorno (ConfigMap)
+configMap:
+  LOG_LEVEL: "debug"
+  DATABASE_HOST: "mi-postgres-postgresql-primary.cx-ayala-dev.svc.cluster.local"
+  DATABASE_PORT: "5432"
+  DATABASE_NAME: "postgres"
+  DATABASE_USER: "postgres"
+
+# Secrets (valores en base64)
+secret:
+  DATABASE_PASSWORD: TWlQYXNzd29yZFNlZ3VybzEyMw==
+
+# Horizontal Pod Autoscaler
+hpa:
+  minReplicas: 2
+  maxReplicas: 6
+  cpuUtilization: 90
+  memoryUtilization: 90        
 ---
