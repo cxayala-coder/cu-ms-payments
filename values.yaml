@@ -21,7 +21,7 @@ secret:
 
 # Horizontal Pod Autoscaler
 hpa:
-  minReplicas: 2
+  minReplicas: 2 
   maxReplicas: 6
   cpuUtilization: 90
   memoryUtilization: 90
