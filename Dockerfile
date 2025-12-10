@@ -4,8 +4,8 @@ FROM cxayala/super-imagen-base:1
 # INSTRUCCIONES
 WORKDIR /app
 
-# Instalar Flask
-RUN pip install flask
+# Instalar Flask y psycopg2
+RUN pip install flask psycopg2-binary
  
 # Copiar el archivo de la aplicación
 COPY app.py .
@@ -15,5 +15,4 @@ EXPOSE 3000
  
 # ENTRYPOINT
 CMD ["python", "app.py"]
-
 
